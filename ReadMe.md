@@ -72,7 +72,7 @@ gcloud storage buckets add-iam-policy-binding gs://${BUCKET_WEB} \
   --role="roles/storage.objectViewer"
 ```
 
-## お土産検索用RAG（VertexAIの準備）
+## お土産検索用RAG（VertexAISearch（AI Applications）の準備）
 以下を参考に、Agent Builder（AI Applications）にて、VertexAISearch用のデータストアを作成し、
 データストアのID（例：rec-svn-rag_1234567890xxx_gcs_store）を取得する。
   - データストア
