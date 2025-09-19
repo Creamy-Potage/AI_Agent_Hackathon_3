@@ -1,0 +1,58 @@
+{% extends "common/layout.html" %}
+
+{% block content %}
+<div class="container">
+  <h1>送り先詳細</h1>
+  <a href="{{ url_for('giftee.giftee_list') }}">戻る</a>&nbsp;&nbsp;
+  <a href="{{ url_for('giftee.giftee_update_input') }}?giftee_uid={{giftee.giftee_uid}}">更新</a>&nbsp;&nbsp;
+  <a href="{{ url_for('giftee.giftee_delete_input') }}?giftee_uid={{giftee.giftee_uid}}">削除</a>
+  <table class="table table-bordered">
+    <tbody>
+      <tr>
+        <td style="width: 20%"><label for="name">名前</label></td>
+        <td>{{ giftee.name }}</td>
+      </tr>
+      <tr>
+        <td><label for="relationship">関係 (家族, 職場, 友人など)</label></td>
+        <td>{{ giftee.relationship }}</td>
+      </tr>
+      <tr>
+        <td><label for="area">住所・所在地</label></td>
+        <td>{{ giftee.area }}</td>
+      </tr>
+      <tr>
+        <td><label for="gender">性別</label></td>
+        <td>{{ giftee.gender }}</td>
+      </tr>
+      <tr>
+        <td><label for="number_of_people">人数 (家族構成など)</label></td>
+        <td>{{ giftee.number_of_people }}</td>
+      </tr>
+      <tr>
+        <td><label for="favorite">好きなもの</label></td>
+        <td>{{ giftee.favorite }}</td>
+      </tr>
+      <tr>
+        <td><label for="dislikes">嫌いなもの</label></td>
+        <td>{{ giftee.dislikes }}</td>
+      </tr>
+      <tr>
+        <td><label for="caution">注意事項</label></td>
+        <td>{{ giftee.caution }}</td>
+      </tr>
+      <tr>
+        <td><label for="memo">メモ</label></td>
+        <td>{{ giftee.memo }}</td>
+      </tr>
+      <tr>
+        <td><label for="created_at">登録日時</label></td>
+        <td>{{ giftee.created_at }}</td>
+      </tr>
+      <tr>
+        <td><label for="updated_at">更新日時</label></td>
+        <td>{{ giftee.updated_at }}</td>
+      </tr>
+    </tbody>
+  </table>  
+</div>
+{% endblock %}

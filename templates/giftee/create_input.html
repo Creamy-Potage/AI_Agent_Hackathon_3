@@ -1,0 +1,51 @@
+{% extends "common/layout.html" %}
+
+{% block content %}
+<div class="container">
+  <h1>送りたい人登録画面</h1>
+  <form action="{{ url_for('giftee.giftee_create_action') }}" method="POST">
+    <table>
+      <tbody>
+        <tr>
+          <td><label for="name">名前<span class="badge badge-danger">必須</span></label></td>
+          <td><input type="text" name="name"></input></td>
+        </tr>
+        <tr>
+          <td><label for="relationship">関係</label></td>
+          <td><input type="text" name="relationship"></td>
+        </tr>
+        <tr>
+          <td><label for="area">住所・所在地</label></td>
+          <td><input type="text" name="area"></td>
+        </tr>
+        <tr>
+          <td><label for="gender">性別</label></td>
+          <td><input type="text" name="gender"></td>
+        </tr>
+        <tr>
+          <td><label for="number_of_people">人数</label></td>
+          <td><input type="text" name="number_of_people"></td>
+        </tr>
+        <tr>
+          <td><label for="favorite">好きなもの</label></td>
+          <td><input type="text" name="favorite"></td>
+        </tr>
+        <tr>
+          <td><label for="dislikes">嫌いなもの</label></td>
+          <td><input type="text" name="dislikes"></td>
+        </tr>
+        <tr>
+          <td><label for="caution">注意事項<br>例：持病、アレルギー、幼児・妊婦の有無、宗教上の規則</label></td>
+          <td><input type="text" name="caution"></td>
+        </tr>
+        <tr>
+          <td><label for="memo">メモ</label></td>
+          <td><textarea name="memo" cols="100" rows="10"></textarea></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <button type="submit" class="btn btn-primary">登録</button>
+  </form>
+</div>
+{% endblock %}

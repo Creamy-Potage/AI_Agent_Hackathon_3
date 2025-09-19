@@ -1,0 +1,13 @@
+{% extends "common/layout.html" %}
+
+{% block content %}
+<div class="container">
+  <h1>お土産候補削除画面</h1>
+  <form action="{{ url_for('souvenir.souvenir_delete_action') }}" method="POST">
+    <input type="hidden" name="souvenir_uid" value="{{ souvenir.souvenir_uid }}" />
+    <p>品名：{{ souvenir.name }} のお土産候補情報を削除してもよろしいですか？
+ 
+    <button type="submit" class="btn btn-primary">削除</button>
+  </form>
+</div>
+{% endblock %}

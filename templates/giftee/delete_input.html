@@ -1,0 +1,13 @@
+{% extends "common/layout.html" %}
+
+{% block content %}
+<div class="container">
+  <h1>送りたい先削除画面</h1>
+    <form action="{{ url_for('giftee.giftee_delete_action') }}" method="POST">
+    <input type="hidden" name="giftee_uid" value="{{ giftee.giftee_uid }}" />
+    <p>名前：{{ giftee.name }} の送りたい先情報を削除してもよろしいですか？
+ 
+    <button type="submit" class="btn btn-primary">削除</button>
+  </form>
+</div>
+{% endblock %}

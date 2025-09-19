@@ -1,0 +1,270 @@
+/* Google Fontsからフォントを読み込む */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Mochiy+Pop+P+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c&display=swap');
+
+
+/* 全体のスタイル設定 */
+body {
+    /*font-family: 'Noto Sans JP', sans-serif;*/
+    /*font-family: "Mochiy Pop P One", sans-serif;*/
+    font-family: "M PLUS Rounded 1c", sans-serif;
+    font-weight: 500;
+    font-style: medium;
+    background-color: #c6d598; /* わずかにグレーがかった背景色 */
+    color: #333;
+}
+
+/* ヘッダーのスタイル */
+h1 {
+    color: #98583b; /* 深みのある青色 */
+    text-align: center;
+    border-bottom: double 6px #98583b; /* 柔らかい色合いのボーダー */
+    padding-bottom: 10px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+h2 {
+    text-align: center;
+    margin-top: 30px;
+}
+
+h4 {
+    color: #fff;
+    background-color: #98583b;
+    padding: 2px;
+}
+
+h5:not(.card-title) {
+    color: #fff;
+    background-color: #98583b;
+    padding: 2px;
+}
+
+/* リンクのスタイルをボタン風に変更 */
+div.container h2 a {
+    display: inline-block;
+    color: #fff;
+    background-color: #3b5998;
+    text-decoration: none;
+    padding: 15px 30px;
+    border-radius: 50px;
+    transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+    font-weight: 700;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+div.container.mt-4 td a {
+    display: inline-block;
+    color: #fff;
+    background-color: #89898a;
+    text-decoration: none;
+    padding: 7px 15px;
+    border-radius: 50px;
+    transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+    font-weight: 700;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    min-width: 100px;
+    text-align: center;
+}
+
+div.container a {
+    display: inline-block;
+    text-decoration: none;
+    background-color: #b80101;
+    color: #fff;
+    padding: 7px 15px;
+    border-radius: 50px;
+    transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+    font-weight: 700;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 12px;
+}
+
+/*
+div.container a[href="/"] {
+    background-color: #89898a;
+    color: #fff;
+}
+
+div.container a[href="/giftee/create_input"], div.container a[href="/giftee/update_input"], 
+div.container a[href="/souvenir/create_input"], div.container a[href="/souvenir/create_input"] {
+    background-color: #3b5998;
+    color: #fff;
+}
+
+div.container a[href="/giftee/delete_input"], div.container a[href="/souvenir/delete_input"]{
+    background-color: #b80101;
+    color: #fff;
+}
+*/
+
+button{
+    display: inline-block;
+    color: #fff;
+    background-color: #3b5998;
+    text-decoration: none;
+    padding: 7px 15px;
+    border-radius: 50px;
+    transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+    font-weight: 700;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* ホバーエフェクト */
+div.container h2 a:hover {
+    background-color: #4c70ba;
+    transform: translateY(-3px); /* わずかに浮き上がる効果 */
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+div.container.mt-4 td a:hover {
+    background-color: #a9a9a9;
+    transform: translateY(-3px); /* わずかに浮き上がる効果 */
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+div.container a:hover {
+    background-color: #d80202;
+    transform: translateY(-3px); /* わずかに浮き上がる効果 */
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+/*
+div.container h2 a:hover, div.container a[href="/giftee/create_input"]:hover, 
+div.container a[href="/giftee/update_input"]:hover, div.container a[href="/souvenir/create_input"]:hover, 
+div.container a[href="/souvenir/create_input"]:hover {
+    background-color: #4c70ba;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+div.container.mt-4 td a:hover, div.container a[href="/"]:hover {
+    background-color: #a9a9a9;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+div.container a:hover, div.container a[href="/giftee/delete_input"]:hover, div.container a[href="/souvenir/delete_input"]:hover {
+    background-color: #d80202;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+*/
+
+button:hover{
+    background-color: #4c70ba;
+    transform: translateY(-3px); /* わずかに浮き上がる効果 */
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* ナビゲーションバーのスタイル（HTML変更なしで調整） */
+.navbar{
+    background-color: #98583b;
+}
+
+.navbar-nav .nav-link.active {
+    font-weight: 700;
+    color: #ffffff !important;
+    position: relative;
+}
+
+.navbar-nav .nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    height: 3px;
+    background-color: #98583b;
+    border-radius: 2px;
+}
+
+/* コンテンツコンテナの余白調整 */
+.container {
+    padding-top: 40px;
+}
+
+.container.toppage {
+    padding-top: 40px;
+    text-align: center;
+}
+
+.container-fluid{
+    position: relative;
+}
+
+/* バッジ */
+.badge-danger {
+    color: #ed0404;
+}
+
+.navbar-brand {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* 画像 */
+img{
+    vertical-align: bottom;
+    height: 2.5rem;
+}
+
+.card-img-top {
+    width: 100%;
+    height: 200px; /* 高さを200px程度に固定 */
+    object-fit: contain; /* 画像の比率を保ったまま、エリア内に収める */
+}
+
+.table img {
+    vertical-align: bottom;
+    height: 5rem;
+    width: 12rem;
+    object-fit: contain;
+}
+
+body > .container > img.logo {
+  margin: 0 auto;
+  max-width: 15%;
+  height: auto;
+}
+
+body > .container > img {
+  margin: 0 auto;
+  max-width: 50%;
+  height: auto;
+}
+
+/* 表 */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #f7d4b7;
+    margin-bottom: 20px;
+}
+
+thead tr td{
+    background-color: #98583b !important;
+    color: #ffffff;
+    white-space: nowrap; /* 追加 */
+}
+
+td:has(label) {
+  background-color: #e0e0e0;
+}
+
+.table td.product-url a {
+    word-break: break-all;
+}
+
+/* 入力エリア */
+input[type="text"],
+textarea {
+  width: 100%;
+}

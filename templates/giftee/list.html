@@ -1,0 +1,57 @@
+{% extends "common/layout.html" %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2>送りたい人一覧</h2>
+  <a href="{{ url_for('index') }}">戻る</a>&nbsp;&nbsp;
+  <a href="{{ url_for('giftee.giftee_create_input') }}">登録</a>
+
+  <div class="d-none d-md-block">
+    <table class="table">
+      <thead class="table-light">
+        <tr>
+          <td></td>
+          <td>名前</td>
+          <td>関係性</td>
+          <td>人数</td>
+          <td>好きなもの</td>
+          <td>嫌いなもの</td>
+          <td>更新日時</td>
+        </tr>
+      </thead>
+      <tbody>
+        {% for giftee in giftees %}
+          <tr>
+            <td><a href="{{ url_for('giftee.giftee_detail') }}?giftee_uid={{giftee.giftee_uid}}">詳細へ</a></td>
+            <td>{{ giftee.name }}</td>
+            <td>{{ giftee.relationship}}</td>
+            <td>{{ giftee.number_of_people }}</td>
+            <td>{{ giftee.favorite }}</td>
+            <td>{{ giftee.dislikes }}</td>
+            <td>{{ giftee.updated_at }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="d-md-none">
+    {% for giftee in giftees %}
+      <div class="card mb-3">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h5 class="card-title mb-0">{{ giftee.name }}</h5>
+          <a href="{{ url_for('giftee.giftee_detail') }}?giftee_uid={{giftee.giftee_uid}}" class="btn btn-sm btn-secondary">詳細へ</a>
+        </div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item"><strong>関係性:</strong> {{ giftee.relationship }}</li>
+          <li class="list-group-item"><strong>人数:</strong> {{ giftee.number_of_people }}</li>
+          <li class="list-group-item"><strong>好きなもの:</strong> {{ giftee.favorite }}</li>
+          <li class="list-group-item"><strong>嫌いなもの:</strong> {{ giftee.dislikes }}</li>
+          <li class="list-group-item"><strong>更新日時:</strong> {{ giftee.updated_at }}</li>
+        </ul>
+      </div>
+    {% endfor %}
+  </div>
+
+</div>
+{% endblock %}

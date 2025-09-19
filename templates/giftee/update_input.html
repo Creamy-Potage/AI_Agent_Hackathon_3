@@ -1,0 +1,52 @@
+{% extends "common/layout.html" %}
+
+{% block content %}
+<div class="container">
+  <h1>送りたい人更新入力画面</h1>
+  <form action="{{ url_for('giftee.giftee_update_action') }}" method="POST">
+    <input type="hidden" name="giftee_uid" value="{{ giftee.giftee_uid }}" />
+    <table>
+      <tbody>
+        <tr>
+          <td><label for="name">名前<span class="badge badge-danger">必須</span></label></td>
+          <td><input type="text" name="name" value="{{ giftee.name }}"></td>
+        </tr>
+        <tr>
+          <td><label for="relationship">関係</label></td>
+          <td><input type="text" name="relationship" value="{{ giftee.relationship }}"></td>
+        </tr>
+        <tr>
+          <td><label for="area">住所・所在地</label></td>
+          <td><input type="text" name="area" value="{{ giftee.area }}"></td>
+        </tr>
+        <tr>
+          <td><label for="gender">性別</label></td>
+          <td><input type="text" name="gender" value="{{ giftee.gender }}"></td>
+        </tr>
+        <tr>
+          <td><label for="number_of_people">人数</label></td>
+          <td><input type="text" name="number_of_people" value="{{ giftee.number_of_people }}"></td>
+        </tr>
+        <tr>
+          <td><label for="favorite">好きなもの</label></td>
+          <td><input type="text" name="favorite" value="{{ giftee.favorite }}"></td>
+        </tr>
+        <tr>
+          <td><label for="dislikes">嫌いなもの</label></td>
+          <td><input type="text" name="dislikes" value="{{ giftee.dislikes }}"></td>
+        </tr>
+        <tr>
+          <td><label for="caution">注意事項<br>例：持病、アレルギー、幼児・妊婦の有無、宗教上の規則</label></td>
+          <td><input type="text" name="caution" value="{{ giftee.caution }}"></td>
+        </tr>
+        <tr>
+          <td><label for="memo">メモ</label></td>
+          <td><textarea name="memo" cols="100" rows="10">{{ giftee.memo }}</textarea></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <button type="submit" class="btn btn-primary">更新</button>
+  </form>
+</div>
+{% endblock %}

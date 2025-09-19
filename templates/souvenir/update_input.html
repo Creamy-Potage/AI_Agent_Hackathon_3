@@ -1,0 +1,56 @@
+{% extends "common/layout.html" %}
+
+{% block content %}
+<div class="container">
+  <h1>お土産候補更新入力画面</h1>
+  <form action="{{ url_for('souvenir.souvenir_update_action') }}" method="POST" enctype="multipart/form-data">
+    <input type="hidden" name="souvenir_uid" value="{{ souvenir.souvenir_uid }}" />
+    <input type="hidden" name="current_image" value="{{ souvenir.image or '' }}">
+    <table>
+      <tbody>
+        <tr>
+          <td><label for="name">品名<span class="badge badge-danger">必須</span></label></td>
+          <td><input type="text" name="name" value="{{ souvenir.name }}"></td>
+        </tr>
+        <tr>
+          <td><label for="image">画像</label></td>
+          <td><input type="file" name="image"></td>
+        </tr>
+        <tr>
+          <td><label for="category">カテゴリ<span class="badge badge-danger">必須</span></label></td>
+          <td><input type="text" name="category" value="{{ souvenir.category }}"></td>
+        </tr>
+        <tr>
+          <td><label for="purchase_location">購入場所</label></td>
+          <td><input type="text" name="purchase_location" value="{{ souvenir.purchase_location }}"></td>
+        </tr>
+        <tr>
+          <td><label for="price">価格（円）</label></td>
+          <td><input type="text" name="price" value="{{ souvenir.price }}"></td>
+        </tr>
+        <tr>
+          <td><label for="expiration_date">日持ち</label></td>
+          <td><input type="text" name="expiration_date" value="{{ souvenir.expiration_date }}"></td>
+        </tr>
+        <tr>
+          <td><label for="product_url">商品URL</label></td>
+          <td>
+            <input type="text" id="product_url" name="product_url" style="width: calc(100% - 60px); margin-right: 5px;" value="{{ souvenir.product_url }}">
+            <button type="button" id="open-url-btn" class="btn btn-secondary btn-sm">開く</button>
+          </td>
+        </tr>
+        <tr>
+          <td><label for="memo">メモ</label></td>
+          <td><textarea name="memo" cols="100" rows="10">{{ souvenir.memo }}</textarea></td>
+        </tr>
+        <tr>
+          <td><label for="rag_memo">RAGメモ</label></td>
+          <td><textarea name="rag_memo" cols="100" rows="10">{{ souvenir.rag_memo }}</textarea></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <button type="submit" class="btn btn-primary">更新</button>
+  </form>
+</div>
+{% endblock %}
