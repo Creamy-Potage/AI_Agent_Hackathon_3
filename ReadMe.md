@@ -48,7 +48,7 @@ use rec_svn_db;
 
 - rec-svn/database/create_table_and_insert.sql
 
-## Cloud Storageのバッケっと作成
+## Cloud Storageのバケット作成
 
 本アプリでは、以下の2つのバケットを使用するので、以下の2つのバケットをGUI画面にて作成する。
 
@@ -85,6 +85,7 @@ gcloud storage buckets add-iam-policy-binding gs://${BUCKET_WEB} \
 
 ## Webアプリ環境の構築
 PROJECT_ID・BUCKET_WEB・BUCKET_RAG・DATA_STORE_ID・DB_PASSの値を修正した後、以下のコマンド実行する。
+※ GitからソースをCloneしたら、フォルダ名を"AI_Agent_Hackathon_3"から、"rec-svn"に変更してください。
 
 ```
 #/bin/sh
