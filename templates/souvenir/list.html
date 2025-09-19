@@ -1,0 +1,83 @@
+{% extends "common/layout.html" %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2>お土産候補一覧</h2>
+  <a href="{{ url_for('index') }}">戻る</a>&nbsp;&nbsp;
+  <a href="{{ url_for('souvenir.souvenir_create_input') }}">追加</a>
+
+  <form method="GET" action="{{ url_for('souvenir.souvenir_list') }}" class="mb-3">
+    <div class="input-group">
+      <input type="text" class="form-control" name="search_keyword" placeholder="キーワードで検索..." value="{{ search_keyword or '' }}">
+      <button class="btn btn-outline-secondary" type="submit">検索</button>
+    </div>
+  </form>
+  
+  <div class="d-none d-md-block">
+    <table class="table">
+        <thead class="table-light">
+        <tr>
+            <td></td>
+            <td>品名</td>
+            <td>画像</td>
+            <td>カテゴリ</td>
+            <td>購入場所</td>
+            <td>価格（円）</td>
+            <td>日持ち</td>
+            <td>商品URL</td>
+        </tr>
+        </thead>
+        <tbody>
+        {% for souvenir in souvenirs %}
+            <tr>
+            <td><a href="{{ url_for('souvenir.souvenir_detail') }}?souvenir_uid={{souvenir.souvenir_uid}}">詳細へ</a></td>
+            <td>{{ souvenir.name }}</td>
+            <td>
+                {# 画像URLが存在すればimgタグで表示し、なければ「画像なし」と表示 #}
+                {% if souvenir.image %}
+                <img src="{{ souvenir.image }}" width="100" alt="{{ souvenir.name }}">
+                {% else %}
+                画像なし
+                {% endif %}
+            </td>
+            <td>{{ souvenir.category }}</td>
+            <td>{{ souvenir.purchase_location}}</td>
+            <td>{{ souvenir.price }}</td>
+            <td>{{ souvenir.expiration_date }}</td>
+            <td class="product-url">
+                <a href="{{ souvenir.product_url }}" target="_blank" rel="noopener noreferrer">{{ souvenir.product_url }}</a>
+            </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+  </div>
+
+
+  <div class="d-md-none">
+    {% for souvenir in souvenirs %}
+      <div class="card mb-3">
+        <div class="card-header fw-bold">
+          {{ souvenir.name }}
+        </div>
+        {% if souvenir.image %}
+          <img src="{{ souvenir.image }}" class="card-img-top img-fluid" alt="{{ souvenir.name }}">
+        {% endif %}
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item"><strong>カテゴリ:</strong> {{ souvenir.category }}</li>
+          <li class="list-group-item"><strong>購入場所:</strong> {{ souvenir.purchase_location}}</li>
+          <li class="list-group-item"><strong>価格（円）:</strong> {{ souvenir.price }}</li>
+          <li class="list-group-item"><strong>日持ち:</strong> {{ souvenir.expiration_date }}</li>
+          <li class="list-group-item text-break">
+            <strong>商品URL:</strong> <a href="{{ souvenir.product_url }}" target="_blank" rel="noopener noreferrer">{{ souvenir.product_url }}</a>
+          </li>
+        </ul>
+        <div class="card-body text-center">
+          <a href="{{ url_for('souvenir.souvenir_detail') }}?souvenir_uid={{souvenir.souvenir_uid}}" class="btn btn-primary">詳細へ</a>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+</div>
+{% endblock %}

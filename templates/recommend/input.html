@@ -1,0 +1,80 @@
+{% extends "common/layout.html" %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2>お土産提案</h2>
+  <a href="{{ url_for('index') }}">戻る</a>&nbsp;&nbsp;
+  <form action="{{ url_for('recommend.propose') }}" method="post">
+
+  <div class="d-none d-md-block">
+    <table class="table">
+      <thead class="table-light">
+        <tr>
+          <td></td>
+          <td></td>
+          <td>名前</td>
+          <td>関係性</td>
+          <td>人数</td>
+          <td>好きなもの</td>
+          <td>嫌いなもの</td>
+          <td>更新日時</td>
+        </tr>
+      </thead>
+      <tbody>
+        {% for giftee in giftees %}
+          <tr>
+            <td><input type="checkbox" name="giftee_checkbox" value="{{ giftee.giftee_uid }}"></td>
+            <td><a href="{{ url_for('giftee.giftee_detail') }}?giftee_uid={{giftee.giftee_uid}}">詳細へ</a></td>
+            <td>{{ giftee.name }}</td>
+            <td>{{ giftee.relationship}}</td>
+            <td>{{ giftee.number_of_people }}</td>
+            <td>{{ giftee.favorite }}</td>
+            <td>{{ giftee.dislikes }}</td>
+            <td>{{ giftee.updated_at }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <div class="mb-3">
+      <label for="condition_text" class="form-label">お土産の予算や旅行状況など、条件を自由に入力してください</label>
+      <textarea class="form-control" id="condition_text" name="condition_text" rows="3" placeholder="例：予算は1人1000円以内。旅行先は京都で9月14日に出発。病気などの注意事項など"></textarea>
+    </div>
+    <div class="d-flex justify-content-end">
+      <button type="submit" class="btn btn-primary">お土産の提案を受ける</button>
+    </div>
+  </div>
+
+  <div class="d-md-none">
+    {% for giftee in giftees %}
+      <div class="card mb-3">
+        <div class="card-header">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" name="giftee_checkbox" value="{{ giftee.giftee_uid }}" id="check_{{ giftee.giftee_uid }}">
+            <label class="form-check-label fw-bold" for="check_{{ giftee.giftee_uid }}">
+              {{ giftee.name }}
+            </label>
+          </div>
+        </div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item"><strong>関係性:</strong> {{ giftee.relationship }}</li>
+          <li class="list-group-item"><strong>人数:</strong> {{ giftee.number_of_people }}</li>
+          <li class="list-group-item"><strong>好きなもの:</strong> {{ giftee.favorite }}</li>
+          <li class="list-group-item"><strong>嫌いなもの:</strong> {{ giftee.dislikes }}</li>
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <small class="text-muted">更新: {{ giftee.updated_at }}</small>
+            <a href="{{ url_for('giftee.giftee_detail') }}?giftee_uid={{giftee.giftee_uid}}" class="btn btn-sm btn-outline-secondary">詳細へ</a>
+          </li>
+        </ul>
+      </div>
+    {% endfor %}
+    <div class="mb-3">
+      <label for="condition_text_mobile" class="form-label">お土産の予算や旅行状況など、条件を自由に入力してください</label>
+      <textarea class="form-control" id="condition_text_mobile" name="condition_text" rows="3" placeholder="例：予算は1人1000円以内。旅行先は京都で9月14日に出発。病気などの注意事項など"></textarea>
+    </div>
+    <div class="d-grid"> <button type="submit" class="btn btn-primary">お土産の提案を受ける</button>
+    </div>
+  </div>
+
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends "common/layout.html" %}
+
+{% block content %}
+<div class="container">
+  <h1>送りたい人更新完了画面</h1>
+  <p>更新しました。送りたい人詳細にて、ご確認ください。</p>
+  <p>
+    <a href="{{ url_for('giftee.giftee_detail') }}?giftee_uid={{ giftee.giftee_uid }}">送りたい人詳細へ</a>
+  </p>
+</div>
+{% endblock %}
+

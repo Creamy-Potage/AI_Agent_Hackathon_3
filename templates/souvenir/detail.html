@@ -1,0 +1,66 @@
+{% extends "common/layout.html" %}
+
+{% block content %}
+<div class="container">
+  <h1>お土産候補詳細</h1>
+  <a href="{{ url_for('souvenir.souvenir_list') }}">戻る</a>&nbsp;&nbsp;
+  <a href="{{ url_for('souvenir.souvenir_update_input') }}?souvenir_uid={{souvenir.souvenir_uid}}">更新</a>&nbsp;&nbsp;
+  <a href="{{ url_for('souvenir.souvenir_delete_input') }}?souvenir_uid={{souvenir.souvenir_uid}}">削除</a>
+  <table class="table table-bordered">
+    <tbody>
+      <tr>
+        <td style="width: 20%"><label for="name">品名</label></td>
+        <td>{{ souvenir.name }}</td>
+      </tr>
+      <tr>
+        <td><label for="image">画像</label></td>
+        <td>
+            {% if souvenir.image and souvenir.image != 'None' %}
+                <img src="{{ souvenir.image }}" class="img-fluid" alt="{{ souvenir.name }}">
+            {% else %}
+                （画像なし）
+            {% endif %}
+            </td>
+      </tr>
+      <tr>
+        <td><label for="category">カテゴリ</label></td>
+        <td>{{ souvenir.category }}</td>
+      </tr>
+      <tr>
+        <td><label for="purchase_location">購入場所</label></td>
+        <td>{{ souvenir.purchase_location }}</td>
+      </tr>
+      <tr>
+        <td><label for="price">価格（円）</label></td>
+        <td>{{ souvenir.price }}</td>
+      </tr>
+      <tr>
+        <td><label for="expiration_date">日持ち</label></td>
+        <td>{{ souvenir.expiration_date }}</td>
+      </tr>
+      <tr>
+        <td><label for="product_url">商品URL</label></td>
+        <td>
+          <a href="{{ souvenir.product_url }}" target="_blank" rel="noopener noreferrer">{{ souvenir.product_url }}</a>
+        </td>
+      </tr>
+      <tr>
+        <td><label for="memo">メモ</label></td>
+        <td>{{ souvenir.memo }}</td>
+      </tr>
+      <tr>
+        <td><label for="rag_memo">RAGメモ</label></td>
+        <td>{{ souvenir.rag_memo }}</td>
+      </tr>
+      <tr>
+        <td><label for="created_at">登録日時</label></td>
+        <td>{{ souvenir.created_at }}</td>
+      </tr>
+      <tr>
+        <td><label for="updated_at">更新日時</label></td>
+        <td>{{ souvenir.updated_at }}</td>
+      </tr>
+    </tbody>
+  </table>  
+</div>
+{% endblock %}

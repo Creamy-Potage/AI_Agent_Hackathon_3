@@ -1,0 +1,142 @@
+{% extends "common/layout.html" %}
+
+{% block content %}
+<div class="container">
+  <h1>お土産候補追加画面</h1>
+  <form action="{{ url_for('souvenir.souvenir_create_action') }}" method="POST" enctype="multipart/form-data">
+    <table>
+      <tbody>
+        <tr>
+          <td><label for="name">品名<span class="badge badge-danger">必須</span></label></td>
+          <td>
+            <input type="text" id="name" name="name"></input>
+            <button type="button" id="autofill-btn" class="btn btn-secondary btn-sm">品名から自動入力</button>
+          </td>
+        </tr>
+        <tr>
+          <td><label for="image">お土産画像</label></td>
+          <td>
+              <input type="file" name="image" id="image">
+              <button type="button" class="btn btn-secondary btn-sm" id="autofill-btn-image">画像から品名自動入力</button>
+          </td>
+        </tr>
+        <tr>
+          <td><label for="category">カテゴリ<span class="badge badge-danger">必須</span></label></td>
+          <td><input type="text" id="category" name="category"></input></td>
+        </tr>
+        <tr>
+          <td><label for="purchase_location">購入場所</label></td>
+          <td><input type="text" id="purchase_location" purchase_location"></td>
+        </tr>
+        <tr>
+          <td><label for="price">価格（円）</label></td>
+          <td><input type="text" id="price" name="price"></td>
+        </tr>
+        <tr>
+          <td><label for="expiration_date">日持ち</label></td>
+          <td><input type="text" id="expiration_date" name="expiration_date"></td>
+        </tr>
+        <tr>
+          <td><label for="product_url">商品URL</label></td>
+          <td>
+            <input type="text" id="product_url" name="product_url" style="width: calc(100% - 60px); margin-right: 5px;">
+            <button type="button" id="open-url-btn" class="btn btn-secondary btn-sm">開く</button>
+          </td>
+        </tr>
+        <tr>
+          <td><label for="memo">メモ</label></td>
+          <td><textarea id="memo" name="memo" cols="100" rows="10"></textarea></td>
+        </tr>
+        <tr>
+          <!-- ※少なくとも商品の特徴、保存方法、個数、個包装か否か、アレルゲン、発売期間、飛行機等での制限 -->
+          <td><label for="rag_memo">RAGメモ</label></td>
+          <td><textarea id="rag_memo" name="rag_memo" cols="100" rows="10"></textarea></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <button type="submit" class="btn btn-primary">追加</button>
+  </form>
+</div>
+
+<script>
+    const autofillButtonimage = document.getElementById('autofill-btn-image');
+    const imageInput = document.getElementById('image');
+    const nameInput = document.getElementById('name'); // 品名入力欄のidを'name'とする
+
+    autofillButtonimage.addEventListener('click', async () => {
+        if (imageInput.files.length === 0) {
+            alert('まず画像ファイルを選択してください。');
+            return;
+        }
+        autofillButtonimage.textContent = '解析中...';
+        const formData = new FormData();
+        formData.append('image', imageInput.files[0]);
+
+        try {
+            const response = await fetch("{{ url_for('souvenir.get_name_from_image') }}", {
+                method: 'POST',
+                body: formData
+            });
+            const data = await response.json();
+            if (data.product_name && data.product_name !== '不明') {
+                nameInput.value = data.product_name;
+            } else {
+                alert('画像から品名を特定できませんでした。');
+            }
+        } catch (error) {
+            alert('自動入力中にエラーが発生しました。');
+        } finally {
+            autofillButtonimage.textContent = '品名から自動入力';
+        }
+    });
+
+  document.getElementById('autofill-btn').addEventListener('click', async () => {
+    const nameInput = document.getElementById('name');
+    const souvenirName = nameInput.value;
+
+    if (!souvenirName) {
+      alert('品名を入力してください。');
+      return;
+    }
+
+    const button = document.getElementById('autofill-btn');
+    const originalButtonText = button.textContent;
+    button.textContent = '生成中...';
+    button.disabled = true;
+
+    try {
+      // バックエンドのAPIにリクエストを送信
+      const response = await fetch("{{ url_for('souvenir.souvenir_autofill') }}", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name: souvenirName }),
+      });
+
+      if (!response.ok) {
+        throw new Error('サーバーでエラーが発生しました。');
+      }
+
+      // レスポンスのJSONデータを取得
+      const data = await response.json();
+
+      // 取得したデータでフォームの値を更新
+      document.getElementById('category').value = data.category || '';
+      document.getElementById('purchase_location').value = data.purchase_location || '';
+      document.getElementById('price').value = data.price || 0;
+      document.getElementById('expiration_date').value = data.expiration_date || '';
+      document.getElementById('product_url').value = data.product_url || '';
+      document.getElementById('rag_memo').value = data.rag_memo || '';
+    } catch (error) {
+      console.error('自動入力エラー:', error);
+      alert('情報の取得に失敗しました。');
+    } finally {
+      // ボタンの状態を元に戻す
+      button.textContent = originalButtonText;
+      button.disabled = false;
+    }
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends "common/layout.html" %}
+
+{% block content %}
+<div class="container toppage">
+  <img src="{{ url_for('static', filename='images/suubeniya_logo_withborder.png') }}" alt="Suubeniya Logo" class="d-inline-block align-top logo"><br>
+  <img src="{{ url_for('static', filename='images/suubeniya_clear.png') }}" alt="Suubeniya Logo" class="d-inline-block align-top">
+  <h1>TOP</h1>
+  <h2><a href="{{ url_for('giftee.giftee_list') }}">送り先一覧</a></h2>
+  <h2><a href="{{ url_for('souvenir.souvenir_list') }}">お土産候補</a></h2>
+  <h2><a href="{{ url_for('recommend.recommend_input') }}">お土産提案</a></h2>
+</div>
+{% endblock %}
