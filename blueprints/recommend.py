@@ -10,14 +10,26 @@ from vertexai.preview.vision_models import ImageGenerationModel
 from google.cloud import storage
 import csv
 import io
+import re # 正規表現ライブラリをインポート
 
 import vertexai 
 from vertexai.generative_models import ( 
     GenerationConfig, 
     GenerativeModel, 
-    Tool, 
+#    Tool, 
+    Part,
     grounding, 
 )
+# from langchain_google_vertexai import ChatVertexAI, HarmBlockThreshold, HarmCategory
+# from langchain_core.messages import HumanMessage
+# from langchain_core.tools import Tool
+# from langchain_core.runnables import RunnableParallel
+from langchain_google_vertexai import ChatVertexAI
+from langchain_google_vertexai import VertexAI
+from langchain_core.tools import Tool  # こちらが正しいインポート元です
+from langchain_core.messages import HumanMessage
+from langchain.agents import AgentExecutor, create_tool_calling_agent
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 
 from google.cloud.sql.connector import Connector
 
@@ -42,7 +54,8 @@ BUCKET_WEB = os.environ.get("BUCKET_WEB") # 画像用バケット
 BUCKET_RAG = os.environ.get("BUCKET_RAG") # RAGテキスト用バケット
 
 # LLMモデル設定
-MODEL_NAME = "gemini-1.5-flash"
+# MODEL_NAME = "gemini-1.5-flash"
+MODEL_NAME = "gemini-2.5-flash"
 
 def generate_souvenir_rag_suggestion_from_the_souvenir_candidates(user_condition: str):
     print("Cloud SQLからお土産データを取得中...")
@@ -170,9 +183,9 @@ def generate_suggestion_from_web_search(user_condition: str):
     try:
         vertexai.init(project=PROJECT_ID, location=REGION)
         
-        tool = Tool.from_google_search_retrieval(grounding.GoogleSearchRetrieval())
-        
-        model = GenerativeModel(MODEL_NAME)
+        model = ChatVertexAI(model_name=MODEL_NAME, project=PROJECT_ID, location=REGION)
+
+        model_with_grounding = model.bind_tools([{"google_search": {}}])
 
         prompt = f"""
 あなたは、プロのお土産選びの専門家です。
@@ -187,6 +200,12 @@ def generate_suggestion_from_web_search(user_condition: str):
 
 提案は、以下のJSON形式の配列で出力してください。
 各商品のキャッチコピーと紹介文は、相手の心に響くような魅力的なものにしてください。
+
+# 最終的な回答に関する厳格なルール
+- あなたの回答は、必ず単一のJSON配列として出力してください。
+- 回答は必ず `[` で始まり、`]` で終わる必要があります。
+- JSON配列の前後に、説明文などの余計なテキストは一切含めないでください。
+- 【重要】回答の文章の末尾に、引用番号（例: [5]や[12, 28]）は一切含めないでください。
 
 [
  {{
@@ -205,22 +224,27 @@ def generate_suggestion_from_web_search(user_condition: str):
  }}
 ]
 """
-        generation_config = GenerationConfig(
-            temperature=0.2,
-            response_mime_type="application/json",
-        )
-    
-        # ツール（Google検索）を有効にしてコンテンツを生成
-        response = model.generate_content(
-            prompt,
-            tools=[tool],
-            generation_config=generation_config
-        )
+
+        response = model_with_grounding.invoke(prompt)
+
+        if isinstance(response.content, list):
+            full_response_string = "".join(response.content)
+        else:
+            full_response_string = response.content
+
+        logging.info(f"Raw LangChain response content: {response.content}")
         
-        logging.info(f"Gemini (Web検索)からの生の回答: {response.text}")
+        #logging.info(f"Gemini (Web検索)からの生の回答: {response.text}")
         print("✅ Web検索による提案の生成が完了しました！")
 
-        result_json = json.loads(response.text)
+        # レスポンスの全パーツからテキストを抽出し、一つの文字列に結合する
+        match = re.search(r'\[.*\]', response.content, re.DOTALL)
+        if not match:
+            logging.error(f"Could not find JSON array in the final text: {repr(response.content)}")
+            raise ValueError("A valid JSON array was not found in the response.")
+        
+        json_string = match.group(0)
+        result_json = json.loads(json_string)
 
         return result_json
 
@@ -346,19 +370,25 @@ def generate_web_suggestions_for_partner(user_condition: str):
         
         # --- AIへの指示 (プロンプト) ---
         vertexai.init(project=PROJECT_ID, location=REGION)
-        tool = Tool.from_google_search_retrieval(grounding.GoogleSearchRetrieval())
-        model = GenerativeModel(MODEL_NAME)
 
-        prompt = f"""
-あなたは、プロのお土産選びの専門家です。
-ユーザーの要望+送り相手を理解し、Webでの検索から、ユーザーの要望に含まれる送り相手が喜ぶ最高のお土産を提案することがあなたの使命です。
+        model = ChatVertexAI(model_name=MODEL_NAME, project=PROJECT_ID, location=REGION)
 
-以下の情報を考慮して、提案を作成してください。
-# ユーザーの要望+送り相手
+        model_with_grounding = model.bind_tools([{"google_search": {}}])
+
+        final_prompt = f"""
+以下の条件に最も合う北海道のお土産を2つ提案してください。
+回答の形式は、必ずJSON配列にしてください。
+
+# 条件
 {user_condition}
 
 上記の「ユーザーの要望+送り相手」を踏まえ、Web検索を元に、送り相手が最も喜びそうなお土産を2つ厳選してください。
-提案は、以下のJSON形式の配列で出力してください。
+提案は、以下のJSON形式の配列で出力してください。引用番号は含めないでください。
+# 最終的な回答に関する厳格なルール
+- あなたの回答は、必ず単一のJSON配列として出力してください。
+- 回答は必ず `[` で始まり、`]` で終わる必要があります。
+- JSON配列の前後に、説明文などの余計なテキストは一切含めないでください。
+- 【重要】回答の文章の末尾に、引用番号（例: [5]や[12, 28]や [1, 2]や [6, 7, 11]や[5, 24]）は一切含めないでください。
 
 [
  {{
@@ -377,21 +407,41 @@ def generate_web_suggestions_for_partner(user_condition: str):
  }}
 ]
 """
-        generation_config = GenerationConfig(
-            temperature=0.2,
-            response_mime_type="application/json",
-        )
-    
-        response = model.generate_content(
-            prompt,
-            tools=[tool],
-            generation_config=generation_config
-        )
+
+        response = model_with_grounding.invoke(final_prompt)
+
+        if isinstance(response.content, list):
+            full_response_string = "".join(response.content)
+        else:
+            full_response_string = response.content
+
+        logging.info(f"Raw LangChain response content: {response.content}")
         
-        logging.info(f"Gemini (総合提案)からの生の回答: {response.text}")
+        #logging.info(f"Gemini (Web検索)からの生の回答: {response.text}")
+        print("✅ Web検索による提案の生成が完了しました！")
+
+        # レスポンスの全パーツからテキストを抽出し、一つの文字列に結合する
+        match = re.search(r'\[.*\]', response.content, re.DOTALL)
+        if not match:
+            logging.error(f"Could not find JSON array in the final text: {repr(response.content)}")
+            raise ValueError("A valid JSON array was not found in the response.")
+        
+        json_string = match.group(0)
+        result_json = json.loads(json_string)
+
+        for item in result_json:
+            # description や memo などの各テキストフィールドをチェック
+            if 'description' in item and isinstance(item['description'], str):
+                item['description'] = re.sub(r' ?\[[\d, ]+\]', '', item['description']).strip()
+            if 'memo' in item and isinstance(item['memo'], str):
+                item['memo'] = re.sub(r' ?\[[\d, ]+\]', '', item['memo']).strip()
+            if 'purchase_location' in item and isinstance(item['purchase_location'], str):
+                item['purchase_location'] = re.sub(r' ?\[[\d, ]+\]', '', item['purchase_location']).strip()
+            if 'expiration_date' in item and isinstance(item['expiration_date'], str):
+                item['expiration_date'] = re.sub(r' ?\[[\d, ]+\]', '', item['expiration_date']).strip()
+
         print("✅ 総合提案の生成が完了しました！")
 
-        result_json = json.loads(response.text)
         return result_json
 
     except Exception as e:

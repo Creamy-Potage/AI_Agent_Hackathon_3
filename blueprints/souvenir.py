@@ -41,7 +41,8 @@ BUCKET_RAG = os.environ.get("BUCKET_RAG")
 storage_client = storage.Client(project=PROJECT_ID)
 
 vertexai.init(project=PROJECT_ID, location=REGION)
-multimodal_model = GenerativeModel("gemini-1.5-flash")
+#multimodal_model = GenerativeModel("gemini-1.5-flash")
+multimodal_model = GenerativeModel("gemini-2.5-flash")
 
 #BUCKET_WEB = "rec-svn1" # 画像用バケット
 bucket_name_rag = os.environ.get('BUCKET_WEB')
@@ -62,8 +63,12 @@ def upload_to_gcs(file, filename):
 # お土産情報を生成する汎用関数
 def get_souvenir_info(souvenir_name: str, item_name: str) -> str:
     """指定された項目について、お土産の情報を生成する汎用関数"""
-    model = GenerativeModel("gemini-1.5-flash")
-    tool = Tool.from_google_search_retrieval(grounding.GoogleSearchRetrieval())
+    # model = GenerativeModel("gemini-1.5-flash")
+    model = GenerativeModel("gemini-2.5-flash")
+    # tool = Tool.from_google_search_retrieval(grounding.GoogleSearchRetrieval())
+    tool = Tool.from_dict({
+    "google_search": {}
+}   )
     
     prompts = {
         "category": f"「{souvenir_name}」のカテゴリを、「お菓子」「雑貨」「飲み物」のように一言で教えて。見つからない時は、「不明」と返してください。",
